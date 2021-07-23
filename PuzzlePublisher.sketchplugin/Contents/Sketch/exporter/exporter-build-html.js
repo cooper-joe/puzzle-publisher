@@ -1,6 +1,6 @@
 
 function buildMainHTML_NavigationIcons(options) {
-    return '<div class="containerSVG"> <svg> \
+    return '<div class="containerSVG"> <svg class="svgIcon"> \
     <symbol id="icMenu" viewBox="0 0 24 24"> \
         <path d="M4,14 C2.8954305,14 2,13.1045695 2,12 C2,10.8954305 2.8954305,10 4,10 C5.1045695,10 6,10.8954305 6,12 C6,13.1045695 5.1045695,14 4,14 Z M12,14 C10.8954305,14 10,13.1045695 10,12 C10,10.8954305 10.8954305,10 12,10 C13.1045695,10 14,10.8954305 14,12 C14,13.1045695 13.1045695,14 12,14 Z M20,14 C18.8954305,14 18,13.1045695 18,12 C18,10.8954305 18.8954305,10 20,10 C21.1045695,10 22,10.8954305 22,12 C22,13.1045695 21.1045695,14 20,14 Z" />\
     </symbol> \
@@ -52,19 +52,25 @@ function buildMainHTML_NavigationIcons(options) {
     <symbol id="icCloseBtn" viewBox="0 0 24 24">\
       <path fill="#FFFFFF" d="M4.29289322,4.29289322 C4.68341751,3.90236893 5.31658249,3.90236893 5.70710678,4.29289322 L5.70710678,4.29289322 L12,10.585 L18.2928932,4.29289322 C18.6533772,3.93240926 19.2206082,3.90467972 19.6128994,4.20970461 L19.7071068,4.29289322 C20.0976311,4.68341751 20.0976311,5.31658249 19.7071068,5.70710678 L19.7071068,5.70710678 L13.415,12 L19.7071068,18.2928932 C20.0675907,18.6533772 20.0953203,19.2206082 19.7902954,19.6128994 L19.7071068,19.7071068 C19.3165825,20.0976311 18.6834175,20.0976311 18.2928932,19.7071068 L18.2928932,19.7071068 L12,13.415 L5.70710678,19.7071068 C5.34662282,20.0675907 4.77939176,20.0953203 4.38710056,19.7902954 L4.29289322,19.7071068 C3.90236893,19.3165825 3.90236893,18.6834175 4.29289322,18.2928932 L4.29289322,18.2928932 L10.585,12 L4.29289322,5.70710678 C3.93240926,5.34662282 3.90467972,4.77939176 4.20970461,4.38710056 Z" />\
     </symbol>\
-    </svg></div>\n';
+    <symbol id="icAddComment" viewBox="0 0 24 24">\
+    <path d="M19,3 L5,3 C3.34314575,3 2,4.34314575 2,6 L2,16 L2.00509269,16.1762728 C2.09633912,17.75108 3.40231912,19 5,19 L15.65,19 L18.7506099,21.4811128 C19.105236,21.7648136 19.545857,21.9193752 20,21.9193752 C21.1045695,21.9193752 22,21.0239447 22,19.9193752 L22,6 C22,4.34314575 20.6568542,3 19,3 Z M5,5 L19,5 C19.5522847,5 20,5.44771525 20,6 L20,19.9193752 L16.3507811,17 L5,17 C4.44771525,17 4,16.5522847 4,16 L4,6 C4,5.44771525 4.44771525,5 5,5 Z M12,7 C12.5522847,7 13,7.44771525 13,8 L13,14 C13,14.5522847 12.5522847,15 12,15 C11.4477153,15 11,14.5522847 11,14 L11,8 C11,7.44771525 11.4477153,7 12,7 Z M9,10 L15,10 C15.5522847,10 16,10.4477153 16,11 C16,11.5522847 15.5522847,12 15,12 L9,12 C8.44771525,12 8,11.5522847 8,11 C8,10.4477153 8.44771525,10 9,10 Z"/>\
+    </symbol >\
+    <symbol id="icComments" viewBox="0 0 24 24">\
+    <path d="M19,3 C20.6568542,3 22,4.34314575 22,6 L22,6 L22,19.9193752 C22,21.0239447 21.1045695,21.9193752 20,21.9193752 C19.545857,21.9193752 19.105236,21.7648136 18.7506099,21.4811128 L18.7506099,21.4811128 L15.65,19 L5,19 C3.40231912,19 2.09633912,17.75108 2.00509269,16.1762728 L2.00509269,16.1762728 L2,16 L2,6 C2,4.34314575 3.34314575,3 5,3 L5,3 Z M19,5 L5,5 C4.44771525,5 4,5.44771525 4,6 L4,6 L4,16 C4,16.5522847 4.44771525,17 5,17 L5,17 L16.3507811,17 L20,19.9193752 L20,6 C20,5.44771525 19.5522847,5 19,5 L19,5 Z M12,12 C12.5522847,12 13,12.4477153 13,13 C13,13.5522847 12.5522847,14 12,14 L8,14 C7.44771525,14 7,13.5522847 7,13 C7,12.4477153 7.44771525,12 8,12 L12,12 Z M16,8 C16.5522847,8 17,8.44771525 17,9 C17,9.55228475 16.5522847,10 16,10 L8,10 C7.44771525,10 7,9.55228475 7,9 C7,8.44771525 7.44771525,8 8,8 L16,8 Z"/>\
+    </symbol >\
+    </svg ></div >\n';
 }
 
 function buildMainHTML(options) {
 
     const verPostfix = "?" + Constants.DOCUMENT_VERSION_PLACEHOLDER
+    const manifest = exporter.getManifest()
 
     let s = "";
     s += '<!DOCTYPE html>\n<html>\n<head>\n<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n';
-    s += '<meta name="generator" content="Generated using Puzzle Publisher plugin for Sketch.app - https://github.com/ingrammicro/puzzle-publisher">\n';
+    s += '<meta name="generator" content="Generated using Puzzle Publisher ' + manifest.version + ' plugin for Sketch.app - https://github.com/ingrammicro/puzzle-publisher">\n';
     s += '<title>' + options.docName + '</title>\n';
     s += '<link rel="shortcut icon"  type="image/png?" href="resources/icon.png' + verPostfix + '">\n';
-    // s += '<link rel="mask-icon" href="https://sketch.cloud/favicon.svg?v=4" color="rgb(252, 177, 0)">\n';
     s += '<link rel="stylesheet" type="text/css" href="resources/viewer.css' + verPostfix + '">\n';
     if (options.enableAnimations) {
         s += '<link rel="stylesheet" type="text/css" href="resources/animations.css' + verPostfix + '">\n';
@@ -87,24 +93,21 @@ function buildMainHTML(options) {
     s += '<script type="text/javascript" src="viewer/story.js' + verPostfix + '" charset="UTF-8"></script>\n';
     s += '<script type="text/javascript" src="viewer/viewer.js' + verPostfix + '" charset="UTF-8"></script>\n';
     s += '<script type="text/javascript" src="viewer/AbstractViewer.js' + verPostfix + '" charset="UTF-8"></script>\n';
+    s += '<script type="text/javascript" src="viewer/CommentsViewer.js' + verPostfix + '" charset="UTF-8"></script>\n';
     s += '<script type="text/javascript" src="viewer/GalleryViewer.js' + verPostfix + '" charset="UTF-8"></script>\n';
     if (options.loadLayers) {
         s += '<script type="text/javascript" src="viewer/LayersData.js' + verPostfix + '" charset="UTF-8"></script>\n';
         s += '<script type="text/javascript" src="viewer/SymbolViewer.js' + verPostfix + '" charset="UTF-8"></script>\n';
         s += '<link rel="stylesheet" type="text/css" href="resources/viewer-fonts.css' + verPostfix + '">\n';
     }
-    s += '<script type="text/javascript" src="viewer/VersionViewer.js' + verPostfix + '" charset="UTF-8"></script>\n';
-    if (options.commentsURL != '') {
-        s += '<link rel="stylesheet" type="text/css" href="' + options.commentsURL + '/EasyPageComments.css' + verPostfix + '"/>\n';
-        s += '<script type="text/javascript" src="' + options.commentsURL + '/EasyPageComments.js' + verPostfix + '"></script>\n';
-        s += '<script type="text/javascript" src="' + options.commentsURL + '/comments.js' + verPostfix + '" charset="UTF-8"></script>\n';
-    }
+    s += '<script type="text/javascript" src="viewer/InfoViewer.js' + verPostfix + '" charset="UTF-8"></script>\n';
     s += '<script type="text/javascript">\n';
-    s += '  var viewer = createViewer(story, "images");\n';
-    if (options.commentsURL != '') {
-        s += '  var comments = createComments();\n';
+    if (options.jsCode != '') {
+        s += 'function runJSCode(){' + options.jsCode + '}\n'
     }
+    s += '  var viewer = createViewer(story, "images");\n';
     s += '</script>\n';
+
     if (options.googleCode != '') {
         if (options.googleCode.startsWith("GTM")) {
             let code = `
@@ -129,7 +132,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
     s += `
 <script>
-    function copyToBuffer(elID) {        
+    function copyToBuffer(elID) {
         var copyText = document.getElementById(elID);
 
         var $temp = $("<input>");
@@ -140,11 +143,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
     function showFAIconInfo(code){
         window.open("https://fontawesome.com/icons?d=gallery&q="+code,"_blank")
-    }                     
+    }
 </script > `
-    s += '<!--HEAD_INJECT-->\n';
-    s += '</head>\n';
-    s += '<body class="screen" style="background:' + options.backColor + '">\n';
+    s += '<!--HEAD_INJECT-->\n'
+    s += '</head>\n'
+    s += '<body class="screen" style="background:' + options.backColor + '"';
+    if (options.jsCode != '') {
+        s += ' onload="runJSCode()" '
+    }
+    s += ">\n"
 
     if (options.googleCode != '') {
         if (options.googleCode.startsWith("GTM")) {
@@ -158,8 +165,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
 
     s += buildMainHTML_NavigationIcons(options)
-    s += '<!-- load indicator -->\n';
-    s += '<div id="loading" >\n';
     s += '\
     <div class="shaft1"></div><div class="shaft2"></div><div class="shaft3"></div>\
     <div class="shaft4"></div><div class="shaft5"></div><div class="shaft6"></div><div class="shaft7"></div>\
@@ -173,7 +178,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <div class="title">\
                   <div style="width:100%;">Element Inspector</div>\
                   <div style="width:24px; height:24px; cursor: pointer;" onclick="viewer.symbolViewer.toggle();  return false;">\
-                    <svg><use xlink:href="#icClose"></use></svg>\
+                    <svg class="svgIcon"><use xlink:href="#icClose"></use></svg>\
                   </div>\
                 </div>\
                 <div class="checkbox-container" style="margin-top:62px;">\
@@ -186,150 +191,163 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <div id="symbol_viewer_content" style="margin-top:20px;">\
                 </div>\
             </div>\
-             <div id="version_viewer" class="hidden">\
+            <div id="comments_viewer" class="hidden">\
                 <div class="title">\
-                  <div style="width:100%;">Version Inspector</div>\
-                  <div style="width:24px; height:24px; cursor: pointer;" onclick="viewer.versionViewer.toggle();  return false;">\
-                    <svg><use xlink:href="#icClose"></use></svg>\
+                    <div style="width:100%;">Comments</div>\
+                    <div style="width:24px; height:24px; cursor: pointer;" onclick="viewer.commentsViewer.toggle();  return false;">\
+                        <svg class="svgIcon"><use xlink:href="#icClose"></use></svg>\
+                    </div>\
+                </div>\
+                <div id="comments_viewer_content">\
+                </div>\
+            </div >\
+            <div id="info_viewer" class="hidden">\
+                <div class="title">\
+                  <div style="width:100%;">Changes Inspector</div>\
+                  <div style="width:24px; height:24px; cursor: pointer;" onclick="viewer.infoViewer.toggle();  return false;">\
+                    <svg class="svgIcon"><use xlink:href="#icClose"></use></svg>\
                   </div>\
                 </div>\
-            <div style="padding: 72px 20px 0 20px">\
-                   Mode:<br />\
-                  <input type="radio" name="version_viewer_mode" id="version_viewer_mode_diff" value="diff" checked onclick="viewer.versionViewer.pageChanged()" disabled /><label for="version_viewer_mode_diff">Differences</label><br />\
-                  <input type="radio" name="version_viewer_mode" id="version_viewer_mode_prev" value="prev" onclick="viewer.versionViewer.pageChanged()" disabled><label for="version_viewer_mode_prev">Prev version</label><br />\
-                  <input type="radio" name="version_viewer_mode" id="version_viewer_mode_new" value="new" onclick="viewer.versionViewer.pageChanged()" disabled><label for="version_viewer_mode_new">New version</label><br />\
-                </div>\
-                <div id="version_viewer_content" style="padding: 72px 20px 0 20px"></div>\
+                <div id="info_viewer_content" style="padding: 72px 20px 0 20px"></div>\
             </div>\
         </div>\
     <div id="content-shadow" class="hidden" onclick="viewer.onContentClick()"></div>\
     <div id="content-modal" class="contentModal hidden" onclick="viewer.onModalClick()"></div>\
     ';
-    if (options.commentsURL != '') {
-        s += ' <div id="commenting" class="hidden">\n';
-        s += '  <h1>EasyPageComments example page</h1>\n';
-        s += '  <h2>Comments</h2>\n';
-        s += '  <div id="Comments"></div>\n';
-        s += '    <h2>Leave a comment</h2>\n';
-        s += '  <div id="CommentForm"></div>\n';
-        s += ' </div>\n';
-    }
-
     s += '        <div id="gallery-modal" class="hidden">\n';
     s += '          <div id="gallery-header">\n';
     s += '            <div id="gallery-header-container">\n';
     s += '              <div id="title"><div>' + options.docName + '</div><div id="screensamount"></div></div>\n';
-    s += '              <div id="search"><input type="text" placeholder="Search screen..." id="searchInput" onkeyup="searchScreen()"></div>\n';
-    s += '              <div id="closebtn" onclick="viewer.galleryViewer.hide(); return false;"><svg><use xlink:href="#icCloseBtn"></use></svg></div>\n';
+    s += '              <div id="search"><input type="text" placeholder="Search screen..." id="searchInput" onkeyup="viewer.galleryViewer.onSearchInputChange()"></div>\n';
+    s += '              <div id="right">\n';
+    s += '                <div class="checkbox-container">\n';
+    s += '                  <input type="checkbox" id="galleryShowMap" onclick="viewer.galleryViewer.enableMapMode(this.checked)"/>\n';
+    s += '                  <label for="galleryShowMap"></label>\n';
+    s += '                  <span class="checkbox-label">Show map (M)</span>\n';
+    s += '                </div>\n';
+    s += '                <div id="closebtn" onclick="viewer.galleryViewer.hide(); return false;"><svg class="svgIcon"><use xlink:href="#icCloseBtn"></use></svg></div>\n';
+    s += '              </div>\n';
     s += '            </div>\n';
     s += '          </div>\n';
     s += '          <div id="gallery"><div id="grid"></div></div>\n';
+    s += '          <div id="map-controls">\n';
+    s += '            <div id="map-controls-container">\n';
+    s += '              <div class="checkbox-container">\n';
+    s += '                <input type="checkbox" id="galleryShowMapLinks" onclick="viewer.galleryViewer.showMapLinks(this.checked)"/>\n';
+    s += '                <label for="galleryShowMapLinks"></label>\n';
+    s += '                <span class="checkbox-label">Show all links (L)</span>\n';
+    s += '              </div>\n';
+    s += '              <input type="range" min="0" max="100" value="50" class="mapZoom" onclick="viewer.galleryViewer.mapZoomChanged(this.value)">\n';
+    s += '              <span onclick="viewer.galleryViewer.resetMapZoom();return false;" class="mapResetZoom">Reset zoom</span>\n';
+    s += '            </div>\n';
+    s += '          </div>\n';
     s += '        </div>\n';
 
     s += "    <div id=\"nav\" class=\"" + (options.hideNav ? "hidden" : "nav") + "\">";
     s += "            <div class=\"navLeft\">";
     s += "                <div id=\"menu\" class=\"menu\">";
     s += "                            <div class=\"groupe\">";
-    s += "                                <div class=\"item\" onclick=\"viewer.toggleLinks(); addRemoveClass('class','menu','active'); return false;\">";
-    s += "                                    <svg><use xlink:href=\"#icPointer\"><\/use><\/svg>";
-    s += "                                    <span>Hot Spots<\/span>";
+    s += "                                <div id=\"menu_comments_viewer\" class=\"hidden item\" onclick=\"viewer.commentsViewer.toggle(); addRemoveClass('class','menu','active'); return false;\">";
+    s += "                                    <svg class='svgIcon'><use xlink:href=\"#icAnnotation\"><\/use><\/svg>";
+    s += "                                    <span>Comments<\/span>";
+    s += "                                    <div class=\"tips\">C<\/div>";
+    s += "                                <\/div>";
+    s += "                                <div id=\"links\" class=\"item\" onclick=\"viewer.toggleLinks(); addRemoveClass('class','menu','active'); return false;\">";
+    s += "                                    <svg class='svgIcon'><use xlink:href=\"#icPointer\"><\/use><\/svg>";
+    s += "                                    <span>Toogle Hot Spots<\/span>";
     s += "                                    <div class=\"tips\">⇧<\/div>";
     s += "                                <\/div>";
-    s += "                                <div class=\"item\" onclick=\"viewer.toggleZoom(); addRemoveClass('class','menu','active'); return false;\">";
-    s += "                                    <svg><use xlink:href=\"#icResize\"><\/use><\/svg>";
+    s += "                                <div  id=\"zoom\" class=\"item\" onclick=\"viewer.toggleZoom(); addRemoveClass('class','menu','active'); return false;\">";
+    s += "                                    <svg class='svgIcon'><use xlink:href=\"#icResize\"><\/use><\/svg>";
     s += "                                    <span>Toogle Auto-Scale<\/span>";
     s += "                                    <div class=\"tips\">Z<\/div>";
     s += "                                <\/div>";
-    s += "                                <div class=\"item\" onclick=\"addRemoveClass('class','menu','active'); viewer.share();  return false;\">";
-    s += "                                    <svg><use xlink:href=\"#icEmbed\"><\/use><\/svg>";
+    s += "                                <div  id=\"embed\" class=\"item\" onclick=\"addRemoveClass('class','menu','active'); viewer.share();  return false;\">";
+    s += "                                    <svg class='svgIcon'><use xlink:href=\"#icEmbed\"><\/use><\/svg>";
     s += "                                    <span>Show Embed Code<\/span>";
     s += "                                    <div class=\"tips\">E<\/div>";
     s += "                                <\/div>";
-    s += "                                <div class=\"item\" onclick=\"addRemoveClass('class','menu','active'); viewer.toogleLayout();  return false;\">";
-    s += "                                    <svg><use xlink:href=\"#icGridLayout\"><\/use><\/svg>";
+    s += "                                <div  id=\"grid\" class=\"item\" onclick=\"addRemoveClass('class','menu','active'); viewer.toogleLayout();  return false;\">";
+    s += "                                    <svg class='svgIcon'><use xlink:href=\"#icGridLayout\"><\/use><\/svg>";
     s += "                                    <span>Toogle Grid Layout<\/span>";
     s += "                                    <div class=\"tips\">L<\/div>";
     s += "                                <\/div>";
+    s += "                             <\/div>"
+    s += "                            <hr>";
+    s += "                             <div class=\"groupe\">"
     if (options.loadLayers) {
-        s += "                            <div class=\"item\" onclick=\"addRemoveClass('class','menu','active'); viewer.symbolViewer.toggle();  return false;\">";
-        s += "                                <svg><use xlink:href=\"#icElementInspector\"><\/use><\/svg>";
-        s += "                                <span>Toogle Elements Inspector<\/span>";
+        s += "                            <div  id=\"symbols\"  class=\"item\" onclick=\"addRemoveClass('class','menu','active'); viewer.symbolViewer.toggle();  return false;\">";
+        s += "                                <svg class='svgIcon'><use xlink:href=\"#icElementInspector\"><\/use><\/svg>";
+        s += "                                <span>Elements Inspector<\/span>";
         s += "                                <div class=\"tips\">M<\/div>";
         s += "                            <\/div>";
     }
-    s += "                                <div id=\"menu_version_viewer\" class=\"hidden item\" onclick=\"addRemoveClass('class','menu','active'); viewer.versionViewer.toggle();  return false;\">";
-    s += "                                    <svg><use xlink:href=\"#icVersionInspector\"><\/use><\/svg>";
-    s += "                                    <span>Version Inspector<\/span>";
+    s += "                                <div id=\"menu_info_viewer\" class=\"item\" onclick=\"addRemoveClass('class','menu','active'); viewer.infoViewer.toggle();  return false;\">";
+    s += "                                    <svg class='svgIcon'><use xlink:href=\"#icVersionInspector\"><\/use><\/svg>";
+    s += "                                    <span>Changes Inspector<\/span>";
     s += "                                    <div class=\"tips\">V<\/div>";
     s += "                                <\/div>";
-    /*
-    s += "                                <div class=\"item disabled\" onclick=\"addRemoveClass('class','annotation','active'); addRemoveClass('class','menu','active');\">";
-    s += "                                    <svg><use xlink:href=\"#icAnnotation\"><\/use><\/svg>";
-    s += "                                    <span>Annotation<\/span>";
-    s += "                                    <div class=\"tips\">⌘A<\/div>";
-    s += "                                <\/div>";
-    */
-    if (options.commentsURL != '') {
-        s += "                                <div class=\"item\" onclick=\"comments.switch(); return false;\">";
-        s += "                                    <svg><use xlink:href=\"#icAnnotation\"><\/use><\/svg>";
-        s += "                                    <span>Comments<\/span>";
-        s += "                                <\/div>";
-    }
-    s += "                            <\/div>";
+    s += "                             <\/div>";
     if (options.serverTools != '') {
         s += "                            <hr>";
         s += "                            <div class=\"groupe\">";
         s += "                                <div class=\"item\" onclick=\"viewer.increaseVersion(); addRemoveClass('class','menu','active'); return false;\">";
-        s += "                                    <svg><use xlink:href=\"#icIncreaseVersion\"><\/use><\/svg>";
-        s += "                                    <span>Version Up<\/span>";
+        s += "                                    <svg class='svgIcon'><use xlink:href=\"#icIncreaseVersion\"><\/use><\/svg>";
+        s += "                                    <span>Up Version<\/span>";
         s += "                                    <div class=\"tips\">⇧ ↑<\/div>";
         s += "                                <\/div>";
         s += "                                <div class=\"item\" onclick=\"viewer.decreaseVersion(); addRemoveClass('class','menu','active'); return false;\">";
-        s += "                                    <svg><use xlink:href=\"#icDecreaseVersion\"><\/use><\/svg>";
-        s += "                                    <span>Version Down<\/span>";
+        s += "                                    <svg class='svgIcon'><use xlink:href=\"#icDecreaseVersion\"><\/use><\/svg>";
+        s += "                                    <span>Down Version<\/span>";
         s += "                                    <div class=\"tips\">⇧ ↓<\/div>";
         s += "                                <\/div>";
         s += "                            <\/div>";
     }
     s += "                            <hr>";
-    s += "                            <div class=\"groupe\">";
+    s += "                            <div  id=\"viewall\" class=\"groupe\">";
     s += "                                <div class=\"item\" onclick=\"viewer.galleryViewer.show(); addRemoveClass('class','menu','active'); return false;\">";
-    s += "                                    <svg><use xlink:href=\"#icGrid\"><\/use><\/svg>";
+    s += "                                    <svg class='svgIcon'><use xlink:href=\"#icGrid\"><\/use><\/svg>";
     s += "                                    <span>View All Screens<\/span>";
     s += "                                    <div class=\"tips\">G<\/div>";
     s += "                                <\/div>";
-    s += "                                <div class=\"item\" onclick=\"viewer.goToPage(0); addRemoveClass('class','menu','active'); return false;\">";
-    s += "                                    <svg><use xlink:href=\"#icBack\"><\/use><\/svg>";
+    s += "                                <div  id=\"start\"  class=\"item\" onclick=\"viewer.goToPage(0); addRemoveClass('class','menu','active'); return false;\">";
+    s += "                                    <svg class='svgIcon'><use xlink:href=\"#icBack\"><\/use><\/svg>";
     s += "                                    <span>Go To Start<\/span>";
     s += "                                    <div class=\"tips\">S<\/div>";
     s += "                                <\/div>";
     s += "                            <\/div>";
-    /*
-    s += "                            <hr>";
-    s += "                            <div class=\"groupe\">";
-    s += "                                <div class=\"item\" onclick=\"addRemoveClass('class','menu','active');\">";
-    s += "                                    <svg><use xlink:href=\"#icHeart\"><\/use><\/svg>";
-    s += "                                    <span>About<\/span>";
-    s += "                                <\/div>";
-    s += "                            <\/div>";
-    */
     s += "                <\/div>";
     s += "                <div id=\"btnMenu\" class=\"btnMenu\" onclick=\"addRemoveClass('class', 'menu', 'active')\">";
-    s += "                    <svg><use xlink:href=\"#icMenu\"><\/use><\/svg>";
+    s += "                    <svg class='svgIcon'><use xlink:href=\"#icMenu\"><\/use><\/svg>";
     s += "                <\/div>";
     s += "                <div id=\"btnOpenNew\" style='display:none' class=\"btnMenu\" onclick=\"viewer.openNewWindow();return false;\">";
-    s += "                    <svg><use xlink:href=\"#icResize\"><\/use><\/svg>";
+    s += "                    <svg class='svgIcon'><use xlink:href=\"#icResize\"><\/use><\/svg>";
     s += "                <\/div>";
     s += "                <div class=\"navPreviewNext\">";
     s += "                    <div id=\"nav-left-prev\" class=\"btnPreview\" onclick=\"viewer.previous(); return false;\" title=\"Previous screen\">";
-    s += "                        <svg><use xlink:href=\"#icArrwLeft\"><\/use><\/svg>";
+    s += "                        <svg class='svgIcon'><use xlink:href=\"#icArrwLeft\"><\/use><\/svg>";
     s += "                    <\/div>";
-    s += "                    <div id=\"nav-left-next\" class=\"btnNext\" onclick=\"viewer.next(); return false;\" title=\"Next screen\"><svg><use xlink:href=\"#icArrwRight\"><\/use><\/svg><\/div>";
+    s += "                    <div id=\"nav-left-next\" class=\"btnNext\" onclick=\"viewer.next(); return false;\" title=\"Next screen\"><svg class='svgIcon'><use xlink:href=\"#icArrwRight\"><\/use><\/svg><\/div>";
     s += "                <\/div>";
     s += "            <\/div>";
-    s += "            <div class=\"navCenter\"><div class=\"pageName title\">Default button<\/div><\/div>";
-    s += "            <div class=\"navRight\">";
-    s += "            <\/div>";
+    s += '          <div class="navCenter">\
+                        <div class="pageName title">Default button</div>\
+                        <div id="info_viewer_options" class="infoViewerMode hidden">\
+                            <input type="radio" name="info_viewer_mode" id="info_viewer_mode_diff" value="diff" checked onclick="viewer.infoViewer.pageChanged()" disabled /><label for="info_viewer_mode_diff">Differences</label>\
+                            <input type="radio" name="info_viewer_mode" id="info_viewer_mode_prev" value="prev" onclick="viewer.infoViewer.pageChanged()" disabled><label for="info_viewer_mode_prev">Prev version</label>\
+                            <input type="radio" name="info_viewer_mode" id="info_viewer_mode_new" value="new " onclick="viewer.infoViewer.pageChanged()" disabled><label for="info_viewer_mode_new">New version</label>\
+                        </div>\
+                    </div>'
+    s += '          <div class="navRight">\
+                        <div id="loading" class="hidden">\
+                            <div class="lds-ring"><div></div><div></div><div></div><div></div></div>\
+                        </div>\
+                        <div id="pageComments" onclick="commentsViewer.toggle(); return false;" class="hidden">\
+                            <svg class="svgIcon"><use xlink:href=\"#icAddComment\"></use></svg>\
+                            <div id = "counter"></div>\
+                        </div>\
+                    </div >'
+    s += "           <\/div>";
     s += "        <\/div>";
 
     s += ' </div>\n';

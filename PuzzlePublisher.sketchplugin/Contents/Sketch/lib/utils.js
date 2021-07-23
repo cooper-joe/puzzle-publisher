@@ -27,6 +27,22 @@ Rectangle.prototype.copyToRect = function () {
 
 class Utils {
 
+
+    static getDocSetting(doc, key, defaultValue = '') {
+        const Settings = require('sketch/settings')
+        let value = Settings.documentSettingForKey(doc, key)
+        if (undefined == value || null == value) value = defaultValue
+        return value
+    }
+
+    static getPluginSetting(key, defaultValue = '') {
+        const Settings = require('sketch/settings')
+        let value = Settings.settingForKey(key)
+        if (undefined == value || null == value) value = defaultValue
+        return value
+    }
+
+
     static upgradeArtboardOverlayPosition(oldValue) {
         const newValues = {
             pinTo: 0,
@@ -187,7 +203,7 @@ class Utils {
             dasherize = true;
         }
         const dividerCharacter = dasherize ? "-" : "_"
-        return name.replace(/[/]/g, "").replace(/[\s_-]+/g, dividerCharacter).toLowerCase()
+        return name.replace(/[\\/,&:]/g, "_").replace(/[\s_-]+/g, dividerCharacter).toLowerCase()
     }
 
 
@@ -242,6 +258,93 @@ class Utils {
         } else {
             return controller.actionForID(type);
         }
+    }
+
+    static getMiroBoardsGroupedByProject(context) {
+        //  Get token
+        var token = api.getToken();
+        if (!token) return null
+        log("publishToMiro: got token")
+
+        // Get request
+        var response = api.authCheckRequest(this.context);
+        if (response && response.success != 1) return null
+
+        log("publishToMiro: established connect")
+
+        const boards = api.getBoards()
+        let projects = boards.map(el => el["project"]).filter(function (x, i, a) {
+            return x != undefined && a.indexOf(x) === i;
+        });
+        projects.sort()
+        let groupedBoards = []
+        let indexIdsMap = []
+        projects.forEach(function (project) {
+            groupedBoards.push("--- " + project + " ----")
+            indexIdsMap.push("")
+            boards.filter(el => el["project"] == project).forEach(function (el) {
+                groupedBoards.push(el['title'])
+                indexIdsMap.push(el['boardId'])
+            })
+        })
+        const boardsWithouProject = boards.filter(el => !("project" in el))
+        if (boardsWithouProject.length) {
+            if (projects.length) {
+                groupedBoards.push("--- " + "Out of projects" + " ----")
+                indexIdsMap.push("")
+            }
+            boardsWithouProject.forEach(function (el) {
+                groupedBoards.push(el['title'])
+                indexIdsMap.push(el['boardId'])
+            })
+        }
+
+        return {
+            indexIdsMap: indexIdsMap,
+            boards: groupedBoards
+        }
+    }
+
+    static testMiro(context, email, password, board) {
+        const UI = require('sketch/ui')
+
+        // Drop old token
+        if (api.getToken()) {
+            api.logoutRequest(context);
+            api.setToken(nil);
+        }
+
+        var keys = [NSMutableArray array];
+        [keys addObject: 'email'];
+        [keys addObject: 'password'];
+
+        var values = [NSMutableArray array];
+        [values addObject: email];
+        [values addObject: encodeHtmlSpecialCharacters(password)];
+
+        var data = [[NSDictionary alloc] initWithObjects: values forKeys: keys]
+
+        var response = api.authRequest(context, data);
+        if (response) {
+            if (response.error) {
+                var messages = getMessagesByError(response.error);
+
+                if (messages.alert) {
+                    UI.alert("Can't connect to Miro", messages.alert)
+                } else if (messages.label) {
+                    UI.alert("Can't connect to Miro", messages.label)
+                }
+            } else {
+                // Set new token
+                var token = response.token;
+                api.setToken(token);
+                api.setFromRetina(true)
+                return true
+            }
+        } else {
+            UI.alert("Can't connect to Miro", "No response")
+        }
+        return false
     }
 }
 

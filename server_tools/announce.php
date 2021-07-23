@@ -53,11 +53,19 @@ class Worker{
         // read params
         $this->skip_tele = $_GET["NOTELE"]."";
         $this->skip_save = $_GET["NOSAVE"]."";
+        
+
+        $secret = $_GET["sec"]."";
+        if($secret!=$this->config['secret-key']){
+            print("Error: secrets are not the same ");
+            return FALSE;
+        }
 
         $data = array(
             'time' => time(),
             'dir' => $_GET["dir"]."",       //  myproject/77
             'author' => $_GET["author"]."",
+            'email' => $_GET["email"]."",
             'message' => $_GET["msg"]."",
             'ver' => $_GET["ver"]."",       // 77
             'down_ver' => '',               // will be specified later
@@ -104,7 +112,7 @@ class Worker{
         $cmd = "diff -rq";
         $cmd = $cmd." ".$this->local_path."/".$this->local_dir."/".$this->data['down_ver'];
         $cmd = $cmd." ".$this->local_path."/".$this->local_dir."/".$this->data['ver'];
-        $cmd = $cmd." | grep /images/ | grep -v /preview";
+        $cmd = $cmd." | grep /images/full";
 
         $res = shell_exec($cmd);
         if(NULL==$res) return TRUE;

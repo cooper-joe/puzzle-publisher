@@ -12,7 +12,6 @@
 var exporter = undefined
 
 
-
 class Exporter {
 
     constructor(selectedPath, ndoc, page, exportOptions, context) {
@@ -26,20 +25,18 @@ class Exporter {
         this.enableTransitionAnimation = false
         this.siteIconLayer = undefined
         this.myLayers = []
-        this.jsStory = '';
         this.errors = []
         this.warnings = []
-        this.exportedImages = []
 
         // workaround for Sketch 52s
-        this.docName = this._clearCloudName(this.ndoc.cloudName())
+        this.docName = this._clearCloudName(this.ndoc.cloudName() + "")
         let posSketch = this.docName.indexOf(".sketch")
         if (posSketch > 0) {
             this.docName = this.docName.slice(0, posSketch)
         }
         // @workaround for Sketch 52
 
-        this.prepareOutputFolder(selectedPath);
+        this.initPaths(selectedPath)
 
         this.exportOptions = exportOptions
         this._readSettings()
@@ -68,6 +65,11 @@ class Exporter {
         const docCustomSortRule = this.Settings.documentSettingForKey(this.doc, SettingKeys.DOC_CUSTOM_SORT_RULE)
         this.sortRule = undefined == docCustomSortRule || docCustomSortRule < 0 ? pluginSortRule : docCustomSortRule
 
+        let fontSizeFormat = this.Settings.settingForKey(SettingKeys.PLUGIN_FONTSIZE_FORMAT)
+        const docCustomFontSize = this.Settings.documentSettingForKey(this.doc, SettingKeys.DOC_CUSTOM_FONTSIZE_FORMAT)
+        if (undefined != docCustomFontSize && docCustomFontSize != 0) fontSizeFormat = docCustomFontSize
+        this.fontSizeFormat = undefined != fontSizeFormat ? fontSizeFormat - 1 : Constants.FONT_SIZE_FORMAT_SKETCH
+
         let backColor = this.Settings.documentSettingForKey(this.doc, SettingKeys.DOC_BACK_COLOR)
         if (undefined == backColor) backColor = ""
         this.backColor = backColor
@@ -79,21 +81,34 @@ class Exporter {
         let fileType = Settings.settingForKey(SettingKeys.PLUGIN_FILETYPE)
         if (fileType == undefined || fileType == "") fileType = "PNG"
         this.fileType = fileType.toLowerCase()
+
+        // To know do we need full-size images or not
+        const miroEnabled = Settings.settingForKey(SettingKeys.PLUGIN_PUBLISH_MIRO_ENABLED) == 1
+        this.exportFullImages = miroEnabled || true
+
+        this.ignoreLibArtboards = this.Settings.settingForKey(SettingKeys.PLUGIN_EXPORT_DISABLE_LIB_ARTBOARDS) == 1
+    }
+
+    getManifest() {
+        var manifestPath = this.context.plugin.url().URLByAppendingPathComponent("Contents").URLByAppendingPathComponent("Sketch").URLByAppendingPathComponent("manifest.json").path()
+        return NSJSONSerialization.JSONObjectWithData_options_error(NSData.dataWithContentsOfFile(manifestPath), 0, nil)
+
     }
 
 
     logMsg(msg) {
-        log(msg)
+        const d = new Date()
+        log(d.getHours() + ":" + d.getMinutes() + "." + d.getSeconds() + " " + msg)
     }
 
 
     logWarning(text) {
-        log("[ WARNING ] " + text)
+        this.logMsg("[ WARNING ] " + text)
         this.warnings.push(text)
     }
 
     logError(error) {
-        log("[ ERROR ] " + error)
+        this.logMsg("[ ERROR ] " + error)
         this.errors.push(error)
     }
 
@@ -152,34 +167,45 @@ class Exporter {
 
         let error = MOPointer.alloc().init();
         if (!fileManager.copyItemAtPath_toPath_error(sourcePath, targetPath, error)) {
-            log(error.value().localizedDescription());
+            this.logMsg(error.value().localizedDescription());
             return this.logError("copyStatic(): Can't copy '" + sourcePath + "' to directory '" + targetPath + "'. Error: " + error.value().localizedDescription());
         }
 
         return true
     }
 
-    generateJSStoryBegin() {
+    startStoryData() {
         const disableHotspots = this.Settings.settingForKey(SettingKeys.PLUGIN_DISABLE_HOTSPOTS) == 1
 
-        this.jsStory =
-            'var story = {\n' +
-            '"docName": "' + Utils.toFilename(this.docName) + '",\n' +
-            '"docPath": "P_P_P",\n' +
-            '"docVersion": "' + Constants.DOCUMENT_VERSION_PLACEHOLDER + '",\n' +
-            '"hasRetina": ' + (this.retinaImages ? 'true' : 'false') + ',\n' +
-            '"serverToolsPath":"' + this.serverTools + '",\n' +
-            '"fileType":"' + this.fileType + '",\n' +
-            '"disableHotspots": ' + (disableHotspots ? 'true' : 'false') + ',\n' +
-            '"pages": [\n';
-    }
+        var ownerName = Utils.getDocSetting(this.ndoc, SettingKeys.DOC_OWNER_NAME)
+        if ('' == ownerName) ownerName = Utils.getPluginSetting(SettingKeys.PLUGIN_AUTHOR_NAME)
+        var ownerEmail = Utils.getDocSetting(this.ndoc, SettingKeys.DOC_OWNER_EMAIL)
+        if ('' == ownerEmail) ownerEmail = Utils.getPluginSetting(SettingKeys.PLUGIN_AUTHOR_EMAIL)
 
-    // result: full path to file OR undefined
-    createJSStoryFile() {
-        const fileName = 'story.js';
-        return this.prepareFilePath(this._outputPath + "/" + Constants.VIEWER_DIRECTORY, fileName);
+        this.storyData = {
+            docName: Utils.toFilename(this.docName),
+            docPath: "P_P_P",
+            docVersion: Constants.DOCUMENT_VERSION_PLACEHOLDER,
+            ownerName: ownerName,
+            ownerEmail: ownerEmail,
+            authorName: Constants.DOCUMENT_AUTHOR_NAME_PLACEHOLDER,
+            authorEmail: Constants.DOCUMENT_AUTHOR_EMAIL_PLACEHOLDER,
+            commentsURL: Constants.DOCUMENT_COMMENTS_URL_PLACEHOLDER,
+            hasRetina: this.retinaImages,
+            serverToolsPath: this.serverTools,
+            fontSizeFormat: this.fontSizeFormat,
+            fileType: this.fileType,
+            disableHotspots: disableHotspots,
+            zoomEnabled: this.Settings.settingForKey(SettingKeys.PLUGIN_DISABLE_ZOOM) != 1,
+            title: this.docName,
+            layersExist: this.enabledJSON,
+            centerContent: this.Settings.settingForKey(SettingKeys.PLUGIN_POSITION) === Constants.POSITION_CENTER),
+            highlightLinks: false,
+            pages: [],
+            groups: []
+        }
+        //
     }
-
 
     createMainHTML() {
         const buildOptions = {
@@ -196,16 +222,14 @@ class Exporter {
         const docHideNav = this.Settings.documentSettingForKey(this.doc, SettingKeys.DOC_CUSTOM_HIDE_NAV)
         buildOptions.hideNav = docHideNav == undefined || docHideNav == 0 ? this.Settings.settingForKey(SettingKeys.PLUGIN_HIDE_NAV) == 1 : docHideNav == 2
 
-        let commentsURL = this.Settings.settingForKey(SettingKeys.PLUGIN_COMMENTS_URL)
-        if (commentsURL == undefined) commentsURL = ''
-        buildOptions.commentsURL = commentsURL
-
         let googleCode = this.Settings.settingForKey(SettingKeys.PLUGIN_GOOGLE_CODE)
         if (googleCode == undefined) googleCode = ''
         buildOptions.googleCode = googleCode
+        let jsCode = this.Settings.settingForKey(SettingKeys.PLUGIN_EXPORT_JS_CODE)
+        if (jsCode == undefined) jsCode = ''
+        buildOptions.jsCode = jsCode
 
         if ("" == buildOptions.backColor) buildOptions.backColor = Constants.DEF_BACK_COLOR
-
 
         const s = buildMainHTML(buildOptions);
 
@@ -221,37 +245,27 @@ class Exporter {
     compressImages() {
         if (!this.exportOptions.compress) return true
 
-        log(" compressImages: running...")
+        this.logMsg(" compressImages: running...")
         const pub = new Publisher(this.context, this.ndoc);
         pub.copyScript("compress2.sh")
         var url = pub.context.plugin.urlForResourceNamed('advpng').path()
         const res = pub.runScriptWithArgs("compress2.sh", [this.imagesPath, url])
         if (!res.result) {
-            log(" compressImages: failed!")
+            this.logMsg(" compressImages: failed!")
         } else
-            log(" compressImages: done!")
+            this.logMsg(" compressImages: done!")
 
         pub.showOutput(res)
     }
 
     buildPreviews() {
-        log(" buildPreviews: running...")
+        this.logMsg(" buildPreviews: running...")
+        // WE NEED THE FOLLOWING DUMMY CODE TO GET UNDO CHANGES ( see PZDoc.undoChanges() )
         const pub = new Publisher(this.context, this.ndoc);
+        let args = ["-Z", "300", "fileName", "--out", this.imagesPath + "previews/"]
+        let res = pub.runToolWithArgs("/usr/bin/sips", args)
 
-        for (var file of this.exportedImages) {
-            //log(" buildPreviews: "+file)
-            var fileName = this.imagesPath + "/" + file
-
-            let args = ["-Z", "300", fileName, "--out", this.imagesPath + "previews/"]
-            let res = pub.runToolWithArgs("/usr/bin/sips", args)
-
-            if (!res.result) {
-                pub.showOutput(res)
-                break
-            }
-        }
-
-        log(" buildPreviews: done!!!!!")
+        this.logMsg(" buildPreviews: done!!!!!")
     }
 
     createViewerFile(fileName, folder = Constants.VIEWER_DIRECTORY) {
@@ -259,7 +273,7 @@ class Exporter {
     }
 
     // result: true OR false
-    generateJSStoryEnd() {
+    finishSaveStoryData() {
         const iFrameSizeSrc = this.Settings.settingForKey(SettingKeys.PLUGIN_SHARE_IFRAME_SIZE)
         let iFrameSize = undefined
         if (iFrameSizeSrc != undefined && iFrameSizeSrc != '') {
@@ -272,34 +286,33 @@ class Exporter {
             }
         }
 
-        this.jsStory +=
-            '   ]\n,' +
-            '"resolutions": [' + (this.retinaImages ? '2' : '1') + '],\n' +
-            '"zoomEnabled": ' + (this.Settings.settingForKey(SettingKeys.PLUGIN_DISABLE_ZOOM) != 1 ? 'true' : 'false') + ',\n' +
-            '"title": "' + this.docName + '",\n' +
-            '"startPageIndex": ' + this.mDoc.startArtboardIndex + ',\n' +
-            '"layersExist": ' + (this.enabledJSON ? "true" : "false") + ',\n' +
-            '"centerContent":  ' + (this.Settings.settingForKey(SettingKeys.PLUGIN_POSITION) === Constants.POSITION_CENTER) + ',\n' +
-            '"totalImages": ' + pzDoc.totalImages + ',\n' +
-            '"highlightLinks": false\n'
+        this.storyData['startPageIndex'] = this.mDoc.startArtboardIndex
+        this.storyData['totalImages'] = this.mDoc.totalImages
         if (undefined != iFrameSize) {
-            this.jsStory += ',"iFrameSizeWidth": "' + iFrameSize.width + '"\n'
-            this.jsStory += ',"iFrameSizeHeight": "' + iFrameSize.height + '"\n'
+            this.storyData['iFrameSizeWidth'] = iFrameSize.width
+            this.storyData['iFrameSizeHeight'] = iFrameSize.height
         }
-        this.jsStory +=
-            '}\n';
+        if ("" != this.backColor) {
+            this.storyData['backColor'] = this.backColor
+        }
 
+        // Convert data to JSON
+        let jsStory = "var story = " + JSON.stringify(this.storyData, null, ' ')
+
+        // And save it
         const pathStoryJS = this.createViewerFile('story.js')
         if (undefined == pathStoryJS) return false
-
-        Utils.writeToFile(this.jsStory, pathStoryJS)
+        Utils.writeToFile(jsStory, pathStoryJS)
         return true
     }
 
 
 
     exportArtboards() {
-        log("exportArtboards: running...")
+        this.logMsg("exportArtboards: running...")
+
+        // Prepare folders
+        this.prepareOutputFolder()
 
         // Copy static files
         if (!this.copyStatic("resources")) return false
@@ -316,13 +329,10 @@ class Exporter {
             if (!this.createMainHTML()) return false
 
             // Build Story.js with hotspots  
-            this.generateJSStoryBegin();
-            let index = 0;
-
+            this.startStoryData();
             // Export every artboard into image
             this.mDoc.export()
-
-            if (!this.generateJSStoryEnd()) return false
+            if (!this.finishSaveStoryData()) return false
 
             // Compress Images
             this.compressImages()
@@ -342,11 +352,12 @@ class Exporter {
             this.logError(error)
         }
         finally {
+            if (DEBUG) exporter.logMsg("exportArtboards: undo changes")
             this.mDoc.undoChanges()
 
         }
 
-        log("exportArtboards: done!")
+        this.logMsg("exportArtboards: done!")
 
         return true
     }
@@ -363,34 +374,27 @@ class Exporter {
     }
 
 
-    prepareOutputFolder(selectedPath) {
-        let error;
-        const fileManager = NSFileManager.defaultManager();
-
+    initPaths(selectedPath) {
         this._outputPath = selectedPath + "/" + this.docName
-
-
-        if (fileManager.fileExistsAtPath(this._outputPath)) {
-            error = MOPointer.alloc().init();
-            if (!fileManager.removeItemAtPath_error(this._outputPath, error)) {
-                log(error.value().localizedDescription());
-            }
-        }
-        error = MOPointer.alloc().init();
-        if (!fileManager.createDirectoryAtPath_withIntermediateDirectories_attributes_error(this._outputPath, false, null, error)) {
-            log(error.value().localizedDescription());
-        }
-
         this.imagesPath = this._outputPath + "/" + Constants.IMAGES_DIRECTORY;
-        const previewPath = this.imagesPath + "previews/"
-        if (!fileManager.fileExistsAtPath(previewPath)) {
-            error = MOPointer.alloc().init();
-            log(previewPath)
-            if (!fileManager.createDirectoryAtPath_withIntermediateDirectories_attributes_error(previewPath, true, null, error)) {
-                log(error.value().localizedDescription());
+        this.fullImagesPath = this.imagesPath + Constants.FULLIMAGE_DIRECTORY
+        this.previewsImagePath = this.imagesPath + Constants.PREVIEWS_DIRECTORY
+    }
+
+
+    prepareOutputFolder() {
+        Utils.deleteFile(this._outputPath)
+
+        function createSubfolder(path) {
+            let error = MOPointer.alloc().init();
+            const fileManager = NSFileManager.defaultManager();
+            if (!fileManager.createDirectoryAtPath_withIntermediateDirectories_attributes_error(path, false, null, error)) {
+                exporter.logMsg(error.value().localizedDescription());
             }
-        } else {
-            Utils.removeFilesWithExtension(this.imagesPath, "png", "jpg");
         }
+
+        createSubfolder(this.previewsImagePath)
+        createSubfolder(this.fullImagesPath)
+
     }
 }

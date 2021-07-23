@@ -1,5 +1,221 @@
 # Change Log
-See discussion on https://spectrum.chat/puzzle-publisher site
+See discussion on https://github.com/ingrammicro/puzzle-publisher/discussions site
+
+
+##  Version 16.5.6 (15 Jul 2021)
+Fixed Element Inspector
+
+##  Version 16.5.5 (14 Jul 2021)
+Hotfix
+
+##  Version 16.5.4 (14 Jul 2021)
+- Rolled back icon name support to fix other tokens
+
+##  Version 16.5.3 (10 Jul 2021)
+Improving Changes Inspector
+
+##  Version 16.5.2 (07 Jul 2021)
+Improving Changes Inspector
+
+##  Version 16.5.1 (29 Jun 2021)
+Corrected "Show symbols" toggler behaviour
+Show icon names (Part II)
+
+##  Version 16.5.0 (29 Jun 2021)
+Use full images in Gallery
+Changes Inspector improved
+Show icon names
+
+##  Version 16.4.3 (26 Jun 2021)
+Fixed internal error related to color variables detection
+
+##  Version 16.4.1 (12 May 2021)
+Text search inside Gallery now finds text layers also
+
+##  Version 16.3.1 (30 Apr 2021)
+Improved scrolling in Text Search
+
+##  Version 16.3.0 (29 Apr 2021)
+Added text search (Cmd+F,Cmd+G)
+
+##  Version 16.2.4 (23 Apr 2021)
+Don't export masked layers without Export Preset configured
+
+##  Version 16.2.3 (20 Apr 2021)
+Workaround for export crash
+
+##  Version 16.2.2 (16 Apr 2021)
+Improved Element Inspector
+
+##  Version 16.2.0 (5 Apr 2021)
+Added comment counters to Gallery
+Added page labels to Gallery Map view
+
+##  Version 16.1.2 (19 Mar 2021)
+Comments Viewer improvements
+
+##  Version 16.1.1 (15 Mar 2021)
+Fixed Version Viewer
+
+##  Version 16.1.0 (12 Mar 2021)
+Added ability to ignore links to library internal artboards (see Configure Exporting - Artboards)
+
+##  Version 16.0.3 (12 Mar 2021)
+Improved comments
+
+##  Version 16.0.2 (05 Mar 2021)
+Fixed mockup version up/down browsing
+
+##  Version 16.0.1 (04 Mar 2021)
+Improved comments
+
+##  Version 16.0.0 (25 Feb 2021)
+Added comments to published mockups
+
+##  Version 15.3.0 (30 Dec 2020)
+Element Inspector allows to review overlapped layers by multiply clicking
+
+##  Version 15.2.7 (28 Dec 2020)
+Fixed modal poisitioning on large displays
+
+##  Version 15.2.5 (21 Dec 2020)
+Escaped "," in image file names to be compatible with Miro
+Other fixed for publishing to Miro
+
+##  Version 15.2.4 (06 Dec 2020)
+Corrected font size for Linux developers
+
+##  Version 15.2.0 (04 Dec 2020)
+Fixed browser page background color
+Added option to see font size adjusted for Linux developers
+
+##  Version 15.1.4 (03 Dec 2020)
+Fixed Miro issues
+
+##  Version 15.1.3 (25 Nov 2020)
+Added support for @XSpacer@ and @YSpacer@ layer name magic keys
+
+##  Version 15.1.3 (25 Nov 2020)
+Fixed issues with Gallery Viewer and Embedded Mode
+
+##  Version 15.1.1 (25 Nov 2020)
+Redesigned map view by @zubr133
+Added page titles to map view
+
+##  Version 15.1.0 (19 Nov 2020)
+Impoved map view:
+1) Added page interactions
+2) Added own URLs to gallery and map views
+3) Other improvements
+
+##  Version 15.0.0 (14 Nov 2020)
+Added map view to All Screens page
+Code refactoring
+
+##  Version 14.11.1 (9 Nov 2020)
+Fix: URLs are lowercased again
+
+##  Version 14.11.0 (9 Nov 2020)
+Fixed "Open HTML in browser" checkbox behaviour
+Suport @Redirect@ for modals too
+
+##  Version 14.10.4 (2 Nov 2020)
+Fixed crash
+
+##  Version 14.10.3 (30 Oct 2020)
+Fixed support for Shape shadows in Inspector
+Fixed "Open in new window" icon behaviour (Embedded mode)
+Supported tokens for color variables
+
+##  Version 14.10.2 (28 Sep 2020)
+Fixes overlay multishadows
+
+##  Version 14.10.1 (16 Sep 2020)
+Fixed navigation menu layout
+
+##  Version 14.10.0 (16 Sep 2020)
+Now it's possible to inject any custom JS code into Viewer. See Plugin > Configure Export > JS Code option.
+As example - you can hide some navigation menu ites using the following code:
+$("#menu #zoom").hide();$("#menu #embed").hide();$("#menu #grid").hide();
+
+"View All Screens" mode now handles "s" key correctly
+
+##  Version 14.9.1 (19 Sep 2020)
+Gallery can be opened on document load using &g=1 search param
+
+##  Version 14.8.14 (17 Sep 2020)
+Fixed publishing to Miro
+
+##  Version 14.8.13 (17 Sep 2020)
+Many improvements in image generation
+- Generate full images only if Miro settings configured
+- Generate preview images by Sketch, not by external "sips" tool
+- Use retina images in Gallery on non-retinal diplays too
+
+##  Version 14.8.12 (10 Sep 2020)
+Fixed direct link to modal called from overlay
+
+##  Version 14.8.11 (2 Sep 2020)
+Fixed exporting of external "external" artboards
+Added success messages to Miro operations
+
+##  Version 14.8.10 (2 Sep 2020)
+Fixed login to Miro for passwords with special characters
+Improved publishing to Miro
+
+##  Version 14.8.8 (1 Sep 2020)
+Group Miro boards by project
+
+##  Version 14.8.7 (31 Aug 2020)
+Fixed image paths in Gallery
+Improved shared style/symbol information in Element Inspector
+
+##  Version 14.8.6 (27 Aug 2020)
+Fixed unstable behaviour of Miro publishing
+
+##  Version 14.8.5 (26 Aug 2020)
+Improved publishing to Miro
+
+##  Version 14.8.4 (20 Aug 2020)
+"Show All Images" feature now shows full artboard pictures included fixed images
+"Publish to Miro" now places artboards correctly to prevent overlaping
+
+##  Version 14.8.3 (19 Aug 2020)
+New feature: The plugin can publish mockups on Miro whiteboards
+
+##  Version 14.7.3 (10 Aug 2020)
+Link inside a modal to the same modal closes it (similer to overlays)
+
+##  Version 14.7.2 (4 Aug 2020)
+Fixed Document Settings modal (height increased to show all fields)
+
+##  Version 14.7.1 (24 July 2020)
+Improved External URL dialog
+
+##  Version 14.7.0 (24 July 2020)
+Added support for relative URLs
+
+##  Version 14.6.1 (25 June 2020)
+Improvement for Element Inspector: click outside of any element unselect current element
+
+##  Version 14.6.0 (19 June 2020)
+Added optional Secret Key pair settings to Configure Publishing dialod and server_tools/config.json
+
+##  Version 14.5.0 (19 June 2020)
+Element Inspector improved
+- build layer tree using valid z-index
+- skip text layers with empty (or whitespace only) content
+- suppor page navigation (left,right keys)
+
+##  Version 14.4.1 (10 June 2020)
+Added support for fixed layers to Element Inspector
+Added ability to disable a library sync for document during automation
+
+##  Version 14.4.0 (8 June 2020)
+Added support for Image layers to Element Inspector
+
+##  Version 14.3.0 (8 June 2020)
+Added margins to Element Inspector
 
 ##  Version 14.2.0 (4 June 2020)
 New features:

@@ -79,8 +79,30 @@ class ViewerPage {
         this.currentX = undefined
         this.currentY = undefined
 
+        // this.searchLayer  = undefined
+
         this.overlayByEvent = undefined
         this.tmpSrcOverlayByEvent = undefined
+
+        this.visibleInGallery = true
+    }
+
+    showHideGalleryLinks(show = null) {
+
+        if (this.slinks) this._showHideGalleryLinkSet(this.slinks, show)
+        if (this.dlinks) this._showHideGalleryLinkSet(this.dlinks, show)
+    }
+
+    _showHideGalleryLinkSet(links, forceShow = null) {
+        links.forEach(function (link) {
+            let show = forceShow != null ? forceShow : this.visibleInGallery && link.dpage.visibleInGallery && link.spage.visibleInGallery
+            // hide link
+            const o = $("#gallery #grid svg #l" + link.index)
+            if (show) o.show(); else o.hide()
+            // hide start point
+            const sp = $("#gallery #grid svg #s" + link.index)
+            if (show) sp.show(); else sp.hide()
+        }, this)
     }
 
     getHash() {
@@ -166,6 +188,106 @@ class ViewerPage {
         }
         this.imageDiv.removeClass("hidden")
         this.visible = true
+    }
+
+    findTextNext() {
+        if (undefined == this.textElemIndex) return false
+        //
+        //this.textElemIndex++
+        this.findText(this.actualSearchText)
+    }
+
+    findText(text) {
+        text = text.toLowerCase().trim()
+        //        
+        if (undefined != this.actualSearchText && this.actualSearchText != text) {
+            this.textElemIndex = undefined
+            this.actualSearchText = undefined
+        }
+        if (undefined == this.textElemIndex) this.textElemIndex = 0
+
+        // Search all layers with required text inside
+        let foundLayers = []
+        this.findTextLayersByText(text, foundLayers)
+        foundLayers.sort(function (a, b) {
+            return a.y < b.y ? -1 : 1
+        })
+        //  No results
+        if (0 == foundLayers.length) {
+            return false
+        }
+        if (foundLayers.length <= this.textElemIndex) {
+            // No more results ahead
+            this.textElemIndex = 0
+        }
+        // Highlight results
+        this.hideFoundTextResults()
+        foundLayers.forEach(function (l, index) {
+            this._findTextShowElement(l, index == this.textElemIndex)
+        }, this)
+        //
+        this.actualSearchText = text
+        if ((foundLayers.length + 1) > this.textElemIndex) this.textElemIndex++
+        //
+        return foundLayers.length > 0
+    }
+
+    // Arguments:
+    //  foundLayers: ref to list result
+    //  layers: list of layers or null (to get a root layers)
+    findTextLayersByText(text, foundLayers, layers = null) {
+        if (null == layers) {
+            layers = layersData[this.index].c
+            if (!layers) return false
+        }
+
+        for (var l of layers.slice().reverse()) {
+            if ("Text" == l.tp && l.tx.toLowerCase().includes(text)) {
+                foundLayers.push(l)
+            }
+            if (undefined != l.c)
+                this.findTextLayersByText(text, foundLayers, l.c)
+        }
+    }
+    _findTextShowElement(l, isFocused = false) {
+        const padding = isFocused ? 5 : 0
+        let x = l.x - padding
+        let y = l.y - padding
+
+        // show layer border
+        var style = "left: " + x + "px; top:" + y + "px; "
+        style += "width: " + (l.w + padding * 2) + "px; height:" + (l.h + padding * 2) + "px; "
+        var elemDiv = $("<div>", {
+            class: isFocused ? "searchFocusedResultDiv" : "searchResultDiv",
+        }).attr('style', style)
+
+        elemDiv.appendTo(this.linksDiv)
+
+        // scroll window to show a layer
+        if (isFocused) {
+            this._scrollTo(l.x, l.y)
+        }
+    }
+
+    _scrollTo(x, y) {
+        for (let p of this.fixedPanels) {
+            if (Math.round(p.y) == 0) {
+                y -= p.height
+                break
+            }
+        }
+        window.scrollTo(x, y - 10);
+    }
+
+    hideFoundTextResults() {
+        $(".searchResultDiv").remove()
+        $(".searchFocusedResultDiv").remove()
+    }
+
+    stopTextSearch() {
+        this.hideFoundTextResults()
+        this.actualSearchText = undefined
+        this.textElemIndex = undefined
     }
 
     updatePosition() {
@@ -591,7 +713,7 @@ class ViewerPage {
         }).attr('width', sizeSrc.width).attr('height', sizeSrc.height);
 
         img.preload(function (perc, done) {
-            console.log(perc, done);
+            //console.log(perc, done);
         });
         return img;
     }
@@ -685,15 +807,16 @@ function handleLinkEvent(event) {
         var destPage = story.pages[destPageIndex]
         if (!destPage) return
 
+
+        if (('overlay' == destPage.type || 'modal' == destPage.type) && destPage.overlayRedirectTargetPage != undefined) {
+
+            // Change base page
+            viewer.goTo(destPage.overlayRedirectTargetPage, false)
+            currentPage = viewer.currentPage
+            orgPage = viewer.currentPage
+        }
+
         if ('overlay' == destPage.type) {
-
-
-            if (destPage.overlayRedirectTargetPage != undefined) {
-                // Change base page
-                viewer.goTo(destPage.overlayRedirectTargetPage, false)
-                currentPage = viewer.currentPage
-                orgPage = viewer.currentPage
-            }
 
             var orgLink = {
                 orgPage: orgPage,
@@ -815,6 +938,11 @@ function handleLinkEvent(event) {
             destPage.showAsOverlayInCurrentPage(orgPage, orgLink, pageX, pageY, linkParentFixed)
             return false
         } else {
+            // close modal if some link inside a modal opens the same modal
+            if (destPageIndex == currentPage.index && currentPage.isModal) {
+                viewer.goBack()
+                return false
+            }
 
             // check if we need to close current overlay
             currentPage.hideCurrentOverlays()

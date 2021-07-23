@@ -4,12 +4,27 @@ class AbstractViewer {
         // common viewer settings, can be changed in child constructors
         this.isSidebarChild = true
         this.blockMainNavigation = false
+        this.enableTopNavigation = false
+        this.alwaysHandlePageChanged = false
 
         // internal viewer props, can be read by child 
         this.inited = false
         this.visible = false
+
+        //
+        viewer.allChilds.push(this)
     }
 
+
+    // called by Viewer
+    pageChanged() {
+
+    }
+
+    // called by viewer
+    viewerResized() {
+
+    }
 
     hide() {
         viewer.hideChild()
@@ -30,6 +45,10 @@ class AbstractViewer {
     handleKeyDownWhileInactive(jevent) {
         return false
     }
+    onContentClick() {
+        return false
+    }
+
 
 
     isVisible() {

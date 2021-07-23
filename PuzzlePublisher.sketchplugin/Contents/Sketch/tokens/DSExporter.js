@@ -26,6 +26,25 @@ const bordedLineEndMap2 = {
     [Style.LineEnd.Projecting]: "projecting"
 }
 
+const BLENDING_MODE_SKETCH_TO_CSS = {
+    [Style.BlendingMode.Normal]: "normal",
+    [Style.BlendingMode.Darken]: "darken",
+    [Style.BlendingMode.Multiply]: "multiply",
+    [Style.BlendingMode.ColorBurn]: "color-burn",
+    [Style.BlendingMode.Lighten]: "lighten",
+    [Style.BlendingMode.Screen]: "screen",
+    [Style.BlendingMode.ColorDodge]: "color-dodge",
+    [Style.BlendingMode.Overlay]: "overlay",
+    //"darken", [Style.BlendingMode.SoftLight]:  // Not supported in CSS
+    //"darken", [Style.BlendingMode.HardLight]:  // Not supported in CSS
+    [Style.BlendingMode.Difference]: "difference",
+    [Style.BlendingMode.Exclusion]: "exclusion",
+    [Style.BlendingMode.Hue]: "hue",
+    [Style.BlendingMode.Saturation]: "saturation",
+    [Style.BlendingMode.Color]: "color",
+    [Style.BlendingMode.Luminosity]: "luminosity"
+}
+
 
 const eol = ";\n"
 const pxeol = "px" + eol
@@ -382,7 +401,6 @@ class DSExporter {
 
         res += spaces + "font-family" + ": " + this._getFontFamilyToken(sStyle.fontFamily) + eol
         res += spaces + "font-size" + ": " + this._getFontSizeToken(sStyle.fontSize) + eol
-        res += spaces + "color" + ": " + this._getColorToken(sStyle.textColor) + eol
         res += spaces + "text-align" + ": " + alignMap2[sStyle.alignment] + eol
         res += spaces + "vertical-align" + ": " + vertAlignMap2[sStyle.verticalAlignment] + eol
         {
@@ -412,6 +430,9 @@ class DSExporter {
         if (this.runningForTokens) {
             res += spaces + PT_PARAGRAPH_SPACING + ": " + sStyle.paragraphSpacing + eol
         }
+
+        //
+        res += spaces + "color" + ": " + this._getColorToken(sStyle.textColor) + eol
 
         return res
     }
@@ -446,6 +467,8 @@ class DSExporter {
             })
             if (Object.keys(radiusesHash).length == 1) {
                 // all points have the same radius
+                // skip zero radius
+                if (0 == l.points[0].cornerRadius) break
                 str = l.points[0].cornerRadius + "px"
             } else {
 
@@ -457,7 +480,7 @@ class DSExporter {
         }
 
         if (sStyle.opacity < 1) {
-            res += spaces + "opacity" + ": " + sStyle.opacity + eol
+            res += spaces + "opacity" + ": " + Math.round(sStyle.opacity * 100) / 100 + eol
         }
 
         return res
@@ -546,6 +569,16 @@ class DSExporter {
         } else {
             return ""
         }
+        //
+        if (Style.BlendingMode.Normal != sStyle.blendingMode) {
+            const cssValue = BLENDING_MODE_SKETCH_TO_CSS[sStyle.blendingMode]
+            if (undefined == cssValue) {
+                this.logError('Can not set CSS mix-blend-mode: for Sketch blendingMode ' + sStyle.blendingMode)
+            } else {
+                res += spaces + "mix-blend-mode: " + cssValue + eol
+            }
+        }
+        //
         return res
     }
 

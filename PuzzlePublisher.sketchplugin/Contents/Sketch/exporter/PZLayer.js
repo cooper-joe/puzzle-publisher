@@ -7,6 +7,8 @@ var Flow = require('sketch/dom').Flow
 var Text = require('sketch/dom').Text
 var Style = require('sketch/dom').Style
 
+var LAYER_COUNTER = 0
+
 var ResizingConstraint = {
     NONE: 0,
     RIGHT: 1 << 0,
@@ -47,11 +49,12 @@ class PZLayer {
 
     // nlayer: ref to native MSLayer Layer
     // myParent: ref to parent MyLayer
-    constructor(sLayer, myParent) {
+     constructor(sLayer, myParent) {
         this.nlayer = sLayer.sketchObject
         this.name = sLayer.name
         this.parent = myParent
         this.objectID = String(sLayer.id)
+        this.ii = LAYER_COUNTER++
         this.originalID = undefined
         this.slayer = sLayer
         this.artboard = myParent ? myParent.artboard : this
@@ -77,7 +80,7 @@ class PZLayer {
 
             const sSymbolMaster = pzDoc.getSymbolMasterByID(symbolID)
             if (!sSymbolMaster) {
-                log("PZLayer:constructor() can't find symbol master for layer=" + this.name)
+                exporter.logMsg("PZLayer:constructor() can't find symbol master for layer=" + this.name)
             } else {
                 this.isSymbolInstance = true
                 this.targetId = targetID
@@ -86,7 +89,7 @@ class PZLayer {
                 const lib = sSymbolMaster.getLibrary()
                 this.smName = sSymbolMaster.name + ""
                 if (lib) {
-                    this.smLib = lib.name
+                    this.sharedLib = lib.name
                     pzDoc.usedLibs[lib.name] = true
                 } else {
 
@@ -102,13 +105,14 @@ class PZLayer {
                 this.styleName = sharedStyle.name
                 const lib = sharedStyle.getLibrary()
                 if (lib) {
-                    this.smLib = lib.name
+                    this.sharedLib = lib.name
                     pzDoc.usedLibs[lib.name] = true
                 }
             }
             if ("Text" == sLayer.type) {
                 this.text = this.slayer.text + ""
             }
+            this.cv = this._getColorVariable()
 
             this.targetId = this.slayer.flow ? this.slayer.flow.targetId : null
         }
@@ -139,6 +143,26 @@ class PZLayer {
         if (undefined != comment && '' != comment) {
             this.comment = comment
         }
+
+        /*
+        // If the object is mask when we need to setup a parent group as exportable
+        if (this.nlayer.hasClippingMask()) {
+            if (this.parent && undefined == this.parent.imageIndex) {
+                this.parent.slayer.exportFormats = [{
+                    fileFormat: "png",
+                    size: "1x"
+                }]
+                this.artboard.addLayerAsExportableImage(this.parent)
+            }
+            sLayer.hidden = false
+            this.hasClippingMask = true
+        } else */if ("Image" == sLayer.type && this.nlayer.isMasked()) {
+            // sLayer.hidden = true
+            this.isMasked = true
+        } else if ("Image" == sLayer.type || (("Group" == sLayer.type || "ShapePath" == sLayer.type) && undefined != sLayer.exportFormats && sLayer.exportFormats.length > 0)) {
+            this.artboard.addLayerAsExportableImage(this)
+        }
+
 
         this.childs = []
         this.hotspots = []
@@ -179,6 +203,17 @@ class PZLayer {
         if (this.name.indexOf(Constants.INT_LAYER_NAME_SITEICON) >= 0) {
             exporter.siteIconLayer = this
         }
+        // check: if this layer should be hiddden during export
+        if (this.name.includes(Constants.INT_LAYER_NAME_SPACER_PART)
+            && (
+                this.name.includes(Constants.INT_LAYER_NAME_SPACER)
+                || this.name.includes(Constants.INT_LAYER_NAME_XSPACER)
+                || this.name.includes(Constants.INT_LAYER_NAME_YSPACER)
+            )) {
+            this.isSpacer = true
+            this.slayer.hidden = true
+        }
+
         // check: if this layer contains special overlay
         if (!this.isArtboard && this.name.indexOf(Constants.INT_LAYER_NAME_REDIRECT) >= 0) {
             this.overlayRedirect = true
@@ -200,14 +235,18 @@ class PZLayer {
     }
 
     collectAChilds(sLayers, space) {
+
         var aLayers = []
         if (undefined == sLayers) {
-            log(this)
-            log("PZLayer:collectAChilds() empty sLayers. this.name=" + this.name)
+            exporter.logMsg("PZLayer:collectAChilds() empty sLayers. this.name=" + this.name)
         }
-        for (const sl of sLayers) {
+        for (const sl of sLayers.filter(l => !l.hidden || l.sketchObject.hasClippingMask())) {
+            //            
             const al = new PZLayer(sl, this)
-            if (al.isGroup) al.childs = al.collectAChilds(sl.layers, space + " ")
+            /*
+            if (undefined != al.imageIndex) {
+            } else
+                */if (al.isGroup) al.childs = al.collectAChilds(sl.layers, space + " ")
             aLayers.push(al)
         }
         return aLayers
@@ -269,9 +308,13 @@ class PZLayer {
             shadowsStyle += shadow.spread + " "
             shadowsStyle += shadow.color + " "
 
-            shadowInfo = {
-                style: shadowsStyle,
-                x: shadow.x + shadow.blur
+            if (shadowInfo) {
+                shadowInfo.style += ", " + shadowsStyle
+            } else {
+                shadowInfo = {
+                    style: shadowsStyle,
+                    x: shadow.x + shadow.blur
+                }
             }
         }
 
@@ -360,12 +403,12 @@ class PZLayer {
 
     _specifyExternalURLHotspot(prefix, finalHotspot, externalLink) {
         if (DEBUG) exporter.logMsg(prefix + "_specifyExternalURLHotspothotspot: href")
-        // found external link
-        const regExp = new RegExp("^http(s?)://");
+        // found external link        
         var href = externalLink.href
+        /*const regExp = new RegExp("^http(s?)://");
         if (!regExp.test(href.toLowerCase())) {
             href = "http://" + href;
-        }
+        }*/
         const target = externalLink.openNewWindow ? "_blank" : null;
 
         finalHotspot.linkType = "href"
@@ -380,23 +423,41 @@ class PZLayer {
     clearRefsBeforeJSON() {
         // need to cleanup temp object to allow dump it into JSON
         // but keep nlayer because Exporter.exportImage() needs it
-        //        
+        // 
+        ///
         this.x = this.frame.x
         this.y = this.frame.y
         this.w = this.frame.width
         this.h = this.frame.height
         this.s = this.smName
         this.l = this.styleName
-        this.b = this.smLib
-        this.c = this.childs
+        this.b = this.sharedLib
+        if (this.childs.length) this.c = this.childs
         this.tp = this.isSymbolInstance ? "SI" : this.slayer.type
         if (!this.isSymbolInstance) this.n = this.name
+        if (this.slayer.hidden) this.hd = true
         //
         if ("Text" == this.slayer.type) {
             this.pr = this._buildTextPropsForJSON()
-        } else if ("ShapePath" == this.slayer.type) {
+        } else if ("ShapePath" == this.slayer.type || "Shape" == this.slayer.type) {
             this.pr = this._buildShapePropsForJSON()
+            this.tp = "ShapePath"    
+        } else if ("Image" == this.slayer.type) {
+            if (this.isMasked) {
+                this.hd = true
+                this.isMasked = undefined
+            } else {
+                this.iu = this._buildImageURL()
+            }
+        } else if (undefined != this.imageIndex) {
+            this.tp = "Image"
+            this.iu = this._buildImageURL()
         }
+        if (this.hasClippingMask) {
+            this.ms = true
+            this.hasClippingMask = undefined
+        }
+
         //
         this.name = undefined
         this.frame = undefined
@@ -405,7 +466,7 @@ class PZLayer {
         this.constrains = undefined
         this.smName = undefined
         this.styleName = undefined
-        this.smLib = undefined
+        this.sharedLib = undefined
         this.text = undefined
         this.childs = undefined
         //
@@ -424,11 +485,19 @@ class PZLayer {
         this.isLink = undefined
         this.hotspots = undefined
         this.targetId = undefined
+        this.imageIndex = undefined
+        this.icpn = undefined
+        this.icpi = undefined
 
+    }
+
+    _buildImageURL() {
+        return Constants.IMAGES_DIRECTORY + Utils.toFilename(this.artboard.name, false) + "--" + this.imageIndex + "." + exporter.fileType;
     }
 
     _buildTextPropsForJSON() {
         this.tx = this.text
+        //
         const pte = exporter.getTokensExporter()
         return pte._getTextStylePropsAsText(this.slayer.style)
     }
@@ -438,6 +507,20 @@ class PZLayer {
         return pte._getLayerStylePropsAsText(null, this.slayer, this.slayer.style)
     }
 
+    _getColorVariable() {
+
+        const style = this.slayer.style
+        if (!style || !style.sketchObject.primitiveTextStyle()) return undefined
+
+        // Try to find that color variables was used                
+        var attributes = style.sketchObject.primitiveTextStyle().attributes()
+        if (!attributes || !attributes.MSAttributedStringColorAttribute || !attributes.MSAttributedStringColorAttribute.swatchID) return undefined
+        var swatchID = attributes.MSAttributedStringColorAttribute.swatchID()
+        if (!swatchID) return undefined
+        //
+        var swatchInfo = pzDoc.getSwatchInfoByID(swatchID)
+        return swatchInfo
+    }
 
     _clearColor(color) {
         // drop FF transparency as default
